@@ -1,0 +1,36 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "cc49a77ad5f7b734298e7f871913623b"
+application_url = "https://male-utility-owners-catalog.trycloudflare.com"
+embedded = true
+name = "wishlist-inspire"
+handle = "wishlist-inspire-315"
+
+[webhooks]
+api_version = "2025-01"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://male-utility-owners-catalog.trycloudflare.com/auth/callback",
+  "https://male-utility-owners-catalog.trycloudflare.com/auth/shopify/callback",
+  "https://male-utility-owners-catalog.trycloudflare.com/api/auth/callback"
+]
+
+[pos]
+embedded = false
+
+[build]
+dev_store_url = "my-awesome-app-dev.myshopify.com"
+automatically_update_urls_on_dev = true
