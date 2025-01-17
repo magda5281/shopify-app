@@ -13,17 +13,33 @@ import { useState } from "react";
 import { useLoaderData, Form } from "@remix-run/react";
 import { json } from "@remix-run/node";
 
+// Import prisma db
+import db from "../db.server";
+
 export async function loader() {
   //get data from data base
-  const settings = {
-    name: "My app",
-    description: "My app description",
-  };
+  //you can import your wishlist model and use it here
+  const settings = await db.settings?.findFirst();
+
   return json(settings);
 }
 export async function action({ request }) {
-  const settings = Object.fromEntires(await request.formData());
-  //you can do send this data to your database
+  const settingsResult = await request.formData();
+  const settings = Object.fromEntries(settingsResult);
+  // Update the database
+  await db.settings.upsert({
+    where: { id: "1" },
+    update: {
+      name: settings.name,
+      description: settings.description,
+    },
+    create: {
+      id: "1",
+      name: settings.name,
+      description: settings.description,
+    },
+  });
+
   return json(settings);
 }
 
@@ -57,7 +73,7 @@ export default function SettingsPage() {
                 <TextField
                   label="App name"
                   name={"name"}
-                  value={formState.name}
+                  value={formState?.name}
                   onChange={(value) =>
                     setFormState({ ...formState, name: value })
                   }
@@ -65,7 +81,7 @@ export default function SettingsPage() {
                 <TextField
                   label="Description"
                   name={"description"}
-                  value={formState.description}
+                  value={formState?.description}
                   onChange={(value) =>
                     setFormState({ ...formState, description: value })
                   }

@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "cc49a77ad5f7b734298e7f871913623b"
-application_url = "https://male-utility-owners-catalog.trycloudflare.com"
+application_url = "https://rankings-signature-reservation-breast.trycloudflare.com"
 embedded = true
 name = "wishlist-inspire"
 handle = "wishlist-inspire-315"
@@ -23,9 +23,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://male-utility-owners-catalog.trycloudflare.com/auth/callback",
-  "https://male-utility-owners-catalog.trycloudflare.com/auth/shopify/callback",
-  "https://male-utility-owners-catalog.trycloudflare.com/api/auth/callback"
+  "https://rankings-signature-reservation-breast.trycloudflare.com/auth/callback",
+  "https://rankings-signature-reservation-breast.trycloudflare.com/auth/shopify/callback",
+  "https://rankings-signature-reservation-breast.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
