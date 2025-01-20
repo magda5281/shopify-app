@@ -26,12 +26,15 @@ export async function loader() {
 export async function action({ request }) {
   const settingsResult = await request.formData();
   const settings = Object.fromEntries(settingsResult);
+
   // Update the database
+  //TODO: update ids in schema to be INTs and npx prisma migrate dev --name add-autoincrement-to-settings
+
   await db.settings.upsert({
     where: { id: "1" },
     update: {
       name: settings.name,
-      description: settings.description,
+      description: settings?.description,
     },
     create: {
       id: "1",
