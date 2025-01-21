@@ -1,0 +1,46 @@
+<div class="wishlist-inspire__icon">
+
+<button type="button"  data-product-id="{{ block.settings.product }}">
+
+<svg 
+  width="30" 
+  height="30" 
+  xmlns="http://www.w3.org/2000/svg" 
+  viewBox="0 0 24 24"
+  fill="none" 
+  stroke="{{ block.settings.colour }}" 
+  stroke-width="2">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+
+{%if block.settings.text != blank%}
+<span class="wishlist-inspire__icon--text" >{{block.settings.text}}</span>
+{%endif%}
+</button>
+
+</div>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ 'wishlist.css' | asset_url }}">
+
+<script src="{{ 'wishlist.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Wishlist Icon",
+  "target": "section",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Product", "autofill": true },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Add to wishlist"
+    },
+    { "type": "color", "id": "colour", "label": "Icon Colour", "default": "#ff0000" }
+  ]
+}
+{% endschema %}
+

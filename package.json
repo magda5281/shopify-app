@@ -53,6 +53,7 @@
     "eslint-plugin-react": "^7.37.4",
     "globals": "^15.14.0",
     "prettier": "^3.2.4",
+    "prettier-plugin-liquid": "^0.0.1-security",
     "typescript": "^5.2.2",
     "vite": "^5.1.3"
   },

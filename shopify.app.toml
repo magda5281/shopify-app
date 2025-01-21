@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "cc49a77ad5f7b734298e7f871913623b"
-application_url = "https://toddler-represent-projector-thats.trycloudflare.com"
+application_url = "https://humanities-survivors-dan-url.trycloudflare.com"
 embedded = true
 name = "wishlist-inspire"
 handle = "wishlist-inspire-315"
@@ -23,9 +23,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://toddler-represent-projector-thats.trycloudflare.com/auth/callback",
-  "https://toddler-represent-projector-thats.trycloudflare.com/auth/shopify/callback",
-  "https://toddler-represent-projector-thats.trycloudflare.com/api/auth/callback"
+  "https://humanities-survivors-dan-url.trycloudflare.com/auth/callback",
+  "https://humanities-survivors-dan-url.trycloudflare.com/auth/shopify/callback",
+  "https://humanities-survivors-dan-url.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
