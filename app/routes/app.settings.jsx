@@ -11,7 +11,6 @@ import {
 import { TitleBar } from "@shopify/app-bridge-react";
 import { useState } from "react";
 import { useLoaderData, Form } from "@remix-run/react";
-import { json } from "@remix-run/node";
 
 // Import prisma db
 import db from "../db.server";
@@ -21,7 +20,7 @@ export async function loader() {
   //you can import your wishlist model and use it here
   const settings = await db.settings?.findFirst();
 
-  return json(settings);
+  return Response.json(settings);
 }
 export async function action({ request }) {
   const settingsResult = await request.formData();
@@ -42,7 +41,7 @@ export async function action({ request }) {
     },
   });
 
-  return json(settings);
+  return Response.json(settings);
 }
 
 export default function SettingsPage() {
