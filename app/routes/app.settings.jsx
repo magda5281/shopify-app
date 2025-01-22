@@ -31,7 +31,6 @@ export async function action({ request }) {
   //TODO: update ids in schema to be INTs and npx prisma migrate dev --name add-autoincrement-to-settings
 
   await db.settings.upsert({
-    where: { id: "1" },
     update: {
       name: settings.name,
       description: settings?.description,
