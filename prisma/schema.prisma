@@ -38,8 +38,9 @@ model Settings {
 model Wishlist{
 
   id            Int    @id @default(autoincrement())
-  customerId    String?
-  productId     String?
+  customerId    String
+  productId     String
   shop          String?
   createdAt     DateTime @default(now())
+   @@unique([customerId, productId]) // Composite unique constraint
 }

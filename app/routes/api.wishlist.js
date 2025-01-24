@@ -1,10 +1,15 @@
 import db from "../db.server";
 import { cors } from "remix-utils/cors";
 
-export async function loader() {
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  const customerId = url.searchParams.get("customerId");
+  const productId = url.searchParams.get("productId");
+  const wishlistItem = await prisma.wishlist.findUnique({
+    where: { customerId_productId: { customerId, productId } },
+  });
   return Response.json({
-    ok: true,
-    message: "Hello from API",
+    isInWishlist: Boolean(wishlistItem),
   });
 }
 
