@@ -3,14 +3,17 @@ import { cors } from "remix-utils/cors";
 
 export async function loader({ request }) {
   const url = new URL(request.url);
+
   const customerId = url.searchParams.get("customerId");
+
   const productId = url.searchParams.get("productId");
-  const wishlistItem = await prisma.wishlist.findUnique({
+
+  const wishlistItem = await db.wishlist.findUnique({
     where: { customerId_productId: { customerId, productId } },
   });
-  return Response.json({
-    isInWishlist: Boolean(wishlistItem),
-  });
+
+  const response = Response.json({ isInWishlist: Boolean(wishlistItem) });
+  return response;
 }
 
 export async function action({ request }) {
@@ -39,26 +42,39 @@ export async function action({ request }) {
         message: "Product added to wishlist",
         method: "POST",
         wishlist: wishlist,
+        isInWishlist: true,
       });
       return cors(request, response);
     case "PATCH":
       return Response.json({ message: "Success", method: "Patch" });
     case "DELETE":
-      const id = data?.id;
-      // Attempt to delete the item by its ID
-      const deletedItem = await db.wishlist.delete({
-        where: {
-          id: parseInt(id), // Ensure the ID is treated as an integer
-        },
-      });
+      try {
+        const wishlistItem = await prisma.wishlist.findUnique({
+          where: { customerId_productId: { customerId, productId } },
+        });
 
-      return Response.json(
-        {
-          message: "Item deleted successfully.",
-          method: "DELETE",
-          deletedItem: deletedItem,
-        },
-        { status: 200 },
-      );
+        if (!wishlistItem) {
+          return new Response(
+            JSON.stringify({ message: "Item not found", isInWishlist: false }),
+            { status: 404, headers: { "Content-Type": "application/json" } },
+          );
+        }
+
+        await prisma.wishlist.delete({
+          where: { id: wishlistItem.id },
+        });
+
+        const response = Response.json({
+          message: "Deleted successfully",
+          isInWishlist: false,
+        });
+        return cors(request, response);
+      } catch (error) {
+        console.error("Error deleting wishlist item:", error);
+        return new Response(
+          JSON.stringify({ message: "Failed to delete item" }),
+          { status: 500, headers: { "Content-Type": "application/json" } },
+        );
+      }
   }
 }

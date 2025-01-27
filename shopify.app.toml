@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "cc49a77ad5f7b734298e7f871913623b"
-application_url = "https://concerned-cooked-along-aged.trycloudflare.com"
+application_url = "https://removable-permitted-polls-barry.trycloudflare.com"
 embedded = true
 name = "wishlist-inspire"
 handle = "wishlist-inspire-315"
@@ -23,9 +23,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://concerned-cooked-along-aged.trycloudflare.com/auth/callback",
-  "https://concerned-cooked-along-aged.trycloudflare.com/auth/shopify/callback",
-  "https://concerned-cooked-along-aged.trycloudflare.com/api/auth/callback"
+  "https://removable-permitted-polls-barry.trycloudflare.com/auth/callback",
+  "https://removable-permitted-polls-barry.trycloudflare.com/auth/shopify/callback",
+  "https://removable-permitted-polls-barry.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

@@ -1,75 +1,74 @@
+function updateButtonUI(isInWishlist, svgIcon, currentTextElement) {
+  if (svgIcon && currentTextElement) {
+    if (isInWishlist) {
+      svgIcon.setAttribute("fill", "#ff0000");
+      currentTextElement.textContent = "Remove from wishlist";
+    } else {
+      svgIcon.setAttribute("fill", "none");
+      currentTextElement.textContent = "Add to wishlist";
+    }
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   // Get all wishlist buttons
   const wishlistButtons = document.querySelectorAll(
     ".wishlist-inspire__icon button",
   );
-  const appUrl = "https://concerned-cooked-along-aged.trycloudflare.com/";
+
+  const appUrl = "https://removable-permitted-polls-barry.trycloudflare.com/";
 
   const customerId = ShopifyAnalytics?.meta?.page?.customerId || null;
-  console.log("customerId:", customerId); //8962023555337
+
   const productId = ShopifyAnalytics?.meta?.product?.id || null;
-  console.log("productId", productId); //9446709985545
+
+  const shopDomain = window.Shopify?.shop || null;
 
   wishlistButtons.forEach(async (button) => {
-    const svgIcon = button.querySelector("svg");
-    const currentTextElement = button.querySelector("span");
+    const svgIcon = button?.querySelector("svg");
+
+    const currentTextElement = button?.querySelector("span");
+
+    let isInWishlist = false;
 
     try {
       const response = await fetch(
         `${appUrl}api/wishlist?customerId=${customerId}&productId=${productId}`,
       );
+
       const data = await response.json();
 
-      if (data.isInWishlist) {
-        if (svgIcon) {
-          svgIcon.setAttribute("fill", "#ff0000"); // Change to a desired colour for 'in wishlist'
-        } else svgIcon.setAttribute("fill", "none");
-      }
+      isInWishlist = data?.isInWishlist;
+
+      updateButtonUI(isInWishlist, svgIcon, currentTextElement);
     } catch (error) {
       console.error("Error fetching wishlist status:", error);
     }
 
-    // button.addEventListener("click", async function () {
-    //   const isCustomerLoggedIn =
-    //     typeof ShopifyAnalytics !== "undefined" &&
-    //     ShopifyAnalytics.meta.page.customerId;
+    button.addEventListener("click", async function () {
+      if (!customerId) {
+        // Show an alert or a custom modal
+        alert("Please log in to add items to your wishlist.");
+        return; // Prevent further execution
+      }
 
-    //   if (!isCustomerLoggedIn) {
-    //     // Show an alert or a custom modal
-    //     alert("Please log in to add items to your wishlist.");
-    //     return; // Prevent further execution
-    //   }
+      const method = isInWishlist ? "DELETE" : "POST";
 
-    //   // Check the current color and toggle between two colors
-    //   const currentColor = svgIcon?.getAttribute("fill");
-    //   const currentText = currentTextElement?.textContent.trim();
-    //   const newColor = currentColor === "none" ? "#ff0000" : "none"; // Toggle between red and black
-    //   svgIcon.setAttribute("fill", newColor); // Update the color
-    //   const newText =
-    //     currentText === "Add to wishlist"
-    //       ? "Remove from wishlist"
-    //       : "Add to wishlist";
-    //   currentTextElement.textContent = newText;
+      const formData = new FormData();
+      formData.append("customerId", customerId);
+      formData.append("productId", productId);
+      formData.append("shop", shopDomain);
 
-    //   //if customer is logged in sent data to database
-    //   const parentDiv = button.closest(".wishlist-inspire__icon");
-    //   const shopDomain = parentDiv?.dataset.shopDomain;
+      const response = await fetch(`${appUrl}api/wishlist`, {
+        method: method,
+        body: formData,
+        redirect: "follow",
+      });
 
-    //   const customerId = ShopifyAnalytics.meta.page.customerId;
-    //   const productId = ShopifyAnalytics.meta.product.id;
+      const result = await response.json();
+      isInWishlist = result.isInWishlist;
 
-    //   const formData = new FormData();
-    //   formData.append("customerId", customerId);
-    //   formData.append("productId", productId);
-    //   formData.append("shop", shopDomain);
-
-    //   const response = await fetch(`${appUrl}api/wishlist`, {
-    //     method: "POST",
-    //     body: formData,
-    //     redirect: "follow",
-    //   });
-
-    //   const data = await response.text();
-    // });
+      updateButtonUI(isInWishlist, svgIcon, currentTextElement);
+    });
   });
 });
