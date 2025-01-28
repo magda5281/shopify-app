@@ -24,13 +24,41 @@ document.addEventListener("DOMContentLoaded", function () {
     ".wishlist-inspire__icon button",
   );
 
-  const appUrl = "https://packard-accident-sin-protest.trycloudflare.com/";
+  const appUrl = "https://kai-insured-dead-evaluated.trycloudflare.com/";
 
   const customerId = ShopifyAnalytics?.meta?.page?.customerId || null;
 
   const productId = ShopifyAnalytics?.meta?.product?.id || null;
 
   const shopDomain = window.Shopify?.shop || null;
+
+  const cacheKey = `wishlist_${customerId}_${productId}`;
+  const cacheTTL = 24 * 60 * 60 * 1000; // 24-hour cache
+
+  function getCachedWishlistItem(key) {
+    const cached = localStorage.getItem(key);
+    if (!cached) return null;
+    const { timestamp, data } = JSON.parse(cached);
+
+    // Invalidate cache if expired
+    if (Date.now() - timestamp > cacheTTL) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return data;
+  }
+
+  function cacheWishlistItem(key, data) {
+    const cacheData = {
+      timestamp: Date.now(),
+      data,
+    };
+    const isInWishlist = data.isInWishlist;
+    isInWishlist
+      ? localStorage.setItem(key, JSON.stringify(cacheData))
+      : localStorage.removeItem(key);
+  }
 
   wishlistButtons.forEach(async (button) => {
     const svgIcon = button?.querySelector("svg");
@@ -39,19 +67,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let isInWishlist = false;
 
-    try {
-      const response = await fetch(
-        `${appUrl}api/wishlist?customerId=${customerId}&productId=${productId}`,
-      );
+    // Load from cache or fetch from server
+    const cachedWishlistItem = getCachedWishlistItem(cacheKey);
 
-      const data = await response.json();
-
-      isInWishlist = data?.isInWishlist;
-
+    if (cachedWishlistItem) {
+      const data = cachedWishlistItem;
+      isInWishlist = data.isInWishlist;
       updateButtonUI(isInWishlist, svgIcon, currentTextElement);
-    } catch (error) {
-      console.error("Error fetching wishlist status:", error);
+    } else {
+      // If no cached data, fetch from server
+      try {
+        const response = await fetch(
+          `${appUrl}api/wishlist?customerId=${customerId}&productId=${productId}`,
+        );
+
+        const data = await response.json();
+        // Cache the response
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+        isInWishlist = data?.isInWishlist;
+        // Cache the fetched data
+        cacheWishlistItem(cacheKey, data);
+        updateButtonUI(isInWishlist, svgIcon, currentTextElement);
+      } catch (error) {
+        console.error("Error fetching wishlist status:", error);
+      }
     }
+
     const handleButtonClick = debounce(async function () {
       if (!customerId) {
         // Show an alert or a custom modal
@@ -74,6 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const result = await response.json();
       isInWishlist = result.isInWishlist;
+      // Update the cache with the new state
+      cacheWishlistItem(cacheKey, result);
 
       updateButtonUI(isInWishlist, svgIcon, currentTextElement);
     }, 300);
