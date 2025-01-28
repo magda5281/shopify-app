@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ".wishlist-inspire__icon button",
   );
 
-  const appUrl = "https://kai-insured-dead-evaluated.trycloudflare.com/";
+  const appUrl = "https://an-cartridge-complete-info.trycloudflare.com/";
 
   const customerId = ShopifyAnalytics?.meta?.page?.customerId || null;
 
@@ -82,10 +82,8 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         const data = await response.json();
-        // Cache the response
-        localStorage.setItem(cacheKey, JSON.stringify(data));
+
         isInWishlist = data?.isInWishlist;
-        // Cache the fetched data
         updateCacheWishlistItem(cacheKey, data);
         updateButtonUI(isInWishlist, svgIcon, currentTextElement);
       } catch (error) {
