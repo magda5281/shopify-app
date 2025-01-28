@@ -10,13 +10,21 @@ function updateButtonUI(isInWishlist, svgIcon, currentTextElement) {
   }
 }
 
+function debounce(func, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   // Get all wishlist buttons
   const wishlistButtons = document.querySelectorAll(
     ".wishlist-inspire__icon button",
   );
 
-  const appUrl = "https://removable-permitted-polls-barry.trycloudflare.com/";
+  const appUrl = "https://packard-accident-sin-protest.trycloudflare.com/";
 
   const customerId = ShopifyAnalytics?.meta?.page?.customerId || null;
 
@@ -44,8 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       console.error("Error fetching wishlist status:", error);
     }
-
-    button.addEventListener("click", async function () {
+    const handleButtonClick = debounce(async function () {
       if (!customerId) {
         // Show an alert or a custom modal
         alert("Please log in to add items to your wishlist.");
@@ -69,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
       isInWishlist = result.isInWishlist;
 
       updateButtonUI(isInWishlist, svgIcon, currentTextElement);
-    });
+    }, 300);
+    button.addEventListener("click", handleButtonClick);
   });
 });
