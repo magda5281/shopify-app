@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return data;
   }
 
-  function cacheWishlistItem(key, data) {
+  function updateCacheWishlistItem(key, data) {
     const cacheData = {
       timestamp: Date.now(),
       data,
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem(cacheKey, JSON.stringify(data));
         isInWishlist = data?.isInWishlist;
         // Cache the fetched data
-        cacheWishlistItem(cacheKey, data);
+        updateCacheWishlistItem(cacheKey, data);
         updateButtonUI(isInWishlist, svgIcon, currentTextElement);
       } catch (error) {
         console.error("Error fetching wishlist status:", error);
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const result = await response.json();
       isInWishlist = result.isInWishlist;
       // Update the cache with the new state
-      cacheWishlistItem(cacheKey, result);
+      updateCacheWishlistItem(cacheKey, result);
 
       updateButtonUI(isInWishlist, svgIcon, currentTextElement);
     }, 300);
