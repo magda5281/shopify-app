@@ -24,7 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
     ".wishlist-inspire__icon button",
   );
 
-  const appUrl = "https://an-cartridge-complete-info.trycloudflare.com/";
+  const appUrl =
+    "https://reference-millennium-limit-gazette.trycloudflare.com/";
 
   const customerId = ShopifyAnalytics?.meta?.page?.customerId || null;
 
