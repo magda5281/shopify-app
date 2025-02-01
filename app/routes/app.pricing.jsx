@@ -8,6 +8,7 @@ import {
   Divider,
   CalloutCard,
   ExceptionList,
+  Tooltip,
 } from "@shopify/polaris";
 import { CheckIcon } from "@shopify/polaris-icons";
 import { TitleBar } from "@shopify/app-bridge-react";
@@ -38,6 +39,7 @@ export const loader = async ({ request }) => {
 let planData = [
   {
     title: "Free",
+    name: "free",
     description: "Free plan with basic features",
     price: "0",
     action: "Upgrade to pro",
@@ -51,6 +53,7 @@ let planData = [
   },
   {
     title: "Pro plan",
+    name: "Monthly subscription",
     description: "Pro plan with advanced features",
     price: "10",
     action: "Upgrade to pro",
@@ -65,7 +68,6 @@ let planData = [
 ];
 export default function PricingPage() {
   const { plan } = useLoaderData();
-
   return (
     <Page>
       <TitleBar title="Pricing" />
@@ -73,7 +75,7 @@ export default function PricingPage() {
         <Layout.Section>
           <CalloutCard
             title=" Upgrade to pro"
-            illustration="https://cdn.shopify.com/s/assets/admin/checkout/settings-customizecart-705f57c725ac05be5a34ec20c05b94298cb8afd10aac7bd9c7ad02030f48cfa0.svg"
+            illustration="https://cdn.shopify.com/s/files/1/0880/6780/1353/files/price.png?v=1738420466"
             primaryAction={{
               content:
                 plan?.status === "ACTIVE" ? "Cancel plan" : "Upgrade to pro",
@@ -88,20 +90,13 @@ export default function PricingPage() {
           </CalloutCard>
         </Layout.Section>
         {planData.map((plan_item, index) => {
-          const isActiveProPlan =
-            plan?.status === "ACTIVE" && plan_item.title === "Pro plan";
-          const isActiveFreePlan =
-            plan.name === "free" && plan_item.title === "Free";
-
           return (
             <Layout.Section variant="oneHalf" key={index}>
               <Card
                 background={
-                  isActiveProPlan
-                    ? "bg-surface-magic-active"
-                    : isActiveFreePlan
-                      ? "bg-surface-magic-active"
-                      : "bg-surface"
+                  plan_item.name === plan.name
+                    ? "bg-surface-success"
+                    : "bg-surface"
                 }
               >
                 <BlockStack gap="200">
@@ -129,16 +124,30 @@ export default function PricingPage() {
                     })}
                   </BlockStack>
                   <Divider></Divider>{" "}
-                  <Button
-                    primary
-                    url={
-                      plan?.status === "ACTIVE" ? "/app/cancel" : "/app/upgrade"
+                  <Tooltip
+                    active={
+                      plan?.status === "ACTIVE" && plan_item.name === plan.name
                     }
+                    content="Are you sure you want to cancel this plan"
                   >
-                    {plan?.status === "ACTIVE"
-                      ? "Cancel plan"
-                      : plan_item.action}
-                  </Button>
+                    <Button
+                      disabled={
+                        plan?.status === "ACTIVE" &&
+                        plan_item.name !== plan.name
+                      }
+                      primary
+                      url={
+                        plan?.status === "ACTIVE" &&
+                        plan_item.name === plan.name
+                          ? "/app/cancel"
+                          : "/app/upgrade"
+                      }
+                    >
+                      {plan?.status === "ACTIVE" && plan_item.name === plan.name
+                        ? "Cancel plan"
+                        : plan_item.action}
+                    </Button>
+                  </Tooltip>
                 </BlockStack>
               </Card>
             </Layout.Section>
